@@ -1,0 +1,28 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navbar");-%>
+  <section class="services-section">
+    <a href="/aze/index#contact" class="about-button"
+      >Konsultasiya planlayırsız?</a
+    >
+    <%-include("partials/navigation" , {title: title});-%>
+    <div class="service-container">
+      <!-- FOR LOOP -->
+      <% services.forEach((service)=>{ %>
+      <div class="service">
+        <a href="/aze/services/<%=service._id%>">
+          <div class="service-img-container">
+            <img src="uploads/<%=service.image.data%>" alt="service-img" />
+          </div>
+          <div class="services-bottom">
+            <div class="services-logo"></div>
+            <div class="services-title"><%-service.name.az-%></div>
+          </div>
+        </a>
+      </div>
+      <% }); %>
+      <!-- END LOOP -->
+    </div>
+  </section>
+  <%-include("partials/footer");-%>
+</body>

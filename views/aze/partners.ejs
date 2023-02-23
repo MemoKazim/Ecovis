@@ -1,0 +1,25 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navbar");-%>
+  <section class="partners-section">
+    <%-include("partials/navigation" , {title: title});-%>
+    <div class="partners-content">
+      <!-- FOR LOOP -->
+      <% partners.forEach((partner)=>{ %>
+      <div class="partner">
+        <div class="circle">
+          <a href="<%=partner.website%>"
+            ><img src="uploads/<%=partner.image.data%>" alt="partner-logo"
+          /></a>
+        </div>
+        <div class="about-partner">
+          <h3><%-partner.name-%></h3>
+          <p><%-partner.details.az-%></p>
+        </div>
+      </div>
+      <% }); %>
+      <!-- END LOOP -->
+    </div>
+  </section>
+  <%-include("partials/footer");-%>
+</body>

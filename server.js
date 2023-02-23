@@ -54,9 +54,6 @@ app.get("/eng/index", (req, res) => {
     });
   });
 });
-app.get("/eng/index#section2", (req, res) => {
-  //
-});
 
 app.post("/eng/success", (req, res) => {
   const contact = new Contact({
@@ -179,7 +176,15 @@ app.get("/eng/contact", (req, res) => {
 // AZE PATTERNS
 
 app.get("/aze/index", (req, res) => {
-  res.render("aze/index", { title: title });
+  Partner.find({}, (err, partnerResult) => {
+    Service.find({}, (err, serviceResult) => {
+      res.render("aze/index", {
+        title: "Əsas Səhifə",
+        partners: partnerResult,
+        services: serviceResult,
+      });
+    });
+  });
 });
 
 app.post("/aze/success", (req, res) => {
@@ -201,25 +206,103 @@ app.post("/aze/success", (req, res) => {
 });
 
 app.get("/aze/about", (req, res) => {
-  res.render("aze/about", { title: title });
+  res.render("aze/about", { title: "Haqqımızda" });
 });
 app.get("/aze/employees", (req, res) => {
-  res.render("aze/employees", { title: title });
+  Member.find({}, (err, memberResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/employees", {
+        title: "İşçilər",
+        AllMembers: memberResult,
+      });
+    }
+  });
+});
+app.get("/aze/employees/members/:id", (req, res) => {
+  Member.findById(req.params.id, (err, memberResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/member", { title: "Üzv", singleMember: memberResult });
+    }
+  });
 });
 app.get("/aze/partners", (req, res) => {
-  res.render("aze/partners", { title: title });
+  Partner.find({}, (err, partnerResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/partners", {
+        title: "Tərədaşlar",
+        partners: partnerResult,
+      });
+    }
+  });
+});
+app.get("/aze/partners/:id", (req, res) => {
+  Partner.findById(req.params.id, (err, partnerResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/partners", {
+        title: "Tərəfdaş",
+        partners: partnerResult,
+      });
+    }
+  });
 });
 app.get("/aze/services", (req, res) => {
-  res.render("aze/services", { title: title });
+  Service.find({}, (err, serviceResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/services", {
+        title: "Xidmətləmiz",
+        services: serviceResult,
+      });
+    }
+  });
+});
+app.get("/aze/services/:id", (req, res) => {
+  Service.findById(req.params.id, (err, serviceResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      Member.find({}, (err, memberResult) => {
+        res.render("aze/service", {
+          title: "Xidmət",
+          service: serviceResult,
+          members: memberResult,
+        });
+      });
+    }
+  });
 });
 app.get("/aze/news", (req, res) => {
-  res.render("aze/news", { title: title });
+  New.find({}, (err, newResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/news", { title: "Xəbərlər", news: newResult });
+    }
+  });
+});
+app.get("/aze/news/:id", (req, res) => {
+  New.findById(req.params.id, (err, newResult) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("aze/new", { title: "Xəbər", singleNew: newResult });
+    }
+  });
 });
 app.get("/aze/career", (req, res) => {
-  res.render("aze/career", { title: title });
+  res.render("aze/career", { title: "Kariyera" });
 });
 app.get("/aze/contact", (req, res) => {
-  res.render("aze/contact", { title: title });
+  res.render("aze/contact", { title: "Əlaqə" });
 });
 
 app.listen(PORT, () => {

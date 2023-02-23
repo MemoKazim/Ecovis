@@ -1,0 +1,37 @@
+<%-include("partials/header" , {title: title});-%>
+<%-include("partials/navbar");-%>
+<body>
+  <section class="about-member">
+    <img src="uploads/<%=singleMember.image.data%>" alt="member-image" />
+    <div class="member-data">
+      <div class="single-member-name">
+        <%-singleMember.fname.az-%> <%-singleMember.lname.az-%>
+      </div>
+      <div class="member-position"><%-singleMember.position-%></div>
+      <br />
+      <div class="member-education">
+        <span class="single-text">Education</span>
+        <% singleMember.education.forEach((data)=>{ %>
+        <div class="education-data">
+          <span><%-data.year-%></span>
+          <span><strong><%-data.faculty.az-%></strong></span>
+        </div>
+        <div class="education-university"><%-data.university.az-%></div>
+        <% }); %>
+      </div>
+      <br />
+      <div class="member-experience">
+        <span class="single-text">Experience</span>
+        <% singleMember.experience.forEach((data)=>{%>
+        <div class="experience-data">
+          <span><%-data.year-%></span>
+          <span><strong><%-data.position-%></strong></span>
+        </div>
+        <div class="experience-organization"><%-data.organization-%></div>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+  </section>
+  <%-include("partials/footer");-%>
+</body>

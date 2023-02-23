@@ -1,0 +1,21 @@
+<section class="section-3">
+  <div class="container-3">
+    <div class="s3-top">
+      <span>Bizə Güvənin</span>
+    </div>
+    <div class="s3-bottom">
+      <div id="partnership">
+        <div class="container">
+          <div class="customer-logos slider">
+            <% partners.forEach((partner)=>{ %>
+            <div
+              class="slide"
+              style="background-image: url(uploads/<%=partner.image.data%>)"
+            ></div>
+            <%});%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navbar");-%>
+  <section class="about-section-1">
+    <img
+      src="uploads/<%=singleNew.image.data%>"
+      alt="new-image"
+      class="about-image"
+    />
+    <%-include("partials/navigation" , {title: title});-%>
+    <div class="about-content">
+      <span class="about-header"><%-singleNew.title.az-%></span>
+      <p><%-singleNew.content.az-%></p>
+    </div>
+  </section>
+
+  <%-include("partials/footer");-%>
+</body>

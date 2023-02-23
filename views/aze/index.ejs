@@ -1,0 +1,86 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navbar");-%>
+  <section class="section-1">
+    <div class="container-1">
+      <div class="s1-header">
+        <h1>Başlıq</h1>
+      </div>
+      <div class="s1-title">
+        <h1>Paragraf</h1>
+      </div>
+      <ul class="sub-sections">
+        <%let loopCounter = 1;%> <% services.forEach(service => { %> <%if
+        (loopCounter === 1) {%>
+        <li
+          class="sub-section-item active"
+          id="section-1-item-<%=loopCounter%>"
+          onclick="showItem('<%=loopCounter%>')"
+        >
+          <a href="/aze/index#section-2">
+            <img
+              src="../images/ecovis_logo_white.svg"
+              alt="ecovis-logo"
+              class="item-logo"
+            />
+
+            <div class="item-content active"><%-service.name.az-%></div>
+          </a>
+        </li>
+        <%} else {%>
+        <li
+          class="sub-section-item"
+          id="section-1-item-<%=loopCounter%>"
+          onclick="showItem('<%=loopCounter%>')"
+        >
+          <a href="/aze/index#section-2">
+            <img
+              src="../images/ecovis_logo.svg"
+              alt="ecovis-logo"
+              class="item-logo"
+            />
+
+            <div class="item-content"><%-service.name.az-%></div>
+          </a>
+        </li>
+        <%}%> <%loopCounter = loopCounter + 1;%> <%});%>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-2" id="section-2">
+    <div class="container-2">
+      <ul class="s2-items">
+        <%loopCounter = 1;%> <%services.forEach(service =>{%> <%if (loopCounter
+        != 1){ %>
+        <li class="s2-item hidden" id="section-2-item-<%=loopCounter%>">
+          <%} else {%>
+        </li>
+        <li class="s2-item" id="section-2-item-<%=loopCounter%>">
+          <%}%>
+          <div class="s2-img">
+            <img src="uploads/<%=service.image.data%>" alt="service-image" />
+          </div>
+          <div class="s2-content">
+            <div class="s2-header"><%-service.name.az-%></div>
+            <div class="s2-text">
+              <%-service.details.az.substring(0, 200);-%>...
+            </div>
+            <div class="s2-buttons">
+              <a href="/aze/services/<%=service._id%>" class="button-1"
+                >Read more</a
+              >
+              <a href="/aze/index#contact" class="button-2"
+                >Planning a consultation</a
+              >
+            </div>
+          </div>
+        </li>
+        <%loopCounter = loopCounter + 1;%> <%});%>
+      </ul>
+    </div>
+  </section>
+
+  <%-include("partials/slider" , {partners: partners});-%>
+  <%-include("partials/contact");-%> <%-include("partials/footer");-%>
+</body>
