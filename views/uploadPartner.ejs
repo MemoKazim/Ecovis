@@ -1,0 +1,19 @@
+<%-include("eng/partials/header" , {title: title});-%>
+<body>
+  <form method="post" enctype="multipart/form-data" action="/uploadPartner">
+    <label for="name">Name: </label>
+    <input type="text" name="name" id="name" /> <br />
+
+    <label for="website">Website: </label>
+    <input type="text" name="website" id="website" /> <br />
+
+    <label for="detail">About Partner: </label>
+    <input type="text" name="detailsAZ" id="detail" placeholder="AZ" />
+    <input type="text" name="detailsEN" id="detailEN" placeholder="EN" />
+    <br />
+
+    <label for="image">Image: </label>
+    <input type="file" name="uploadedImage" id="image" /> <br />
+    <button type="submit">Send</button>
+  </form>
+</body>

@@ -1,0 +1,73 @@
+<%-include("eng/partials/header" , {title: title});-%>
+<body>
+  <form method="post" enctype="multipart/form-data" action="/uploadMember">
+    <label for="name">Name: </label>
+    <input type="text" name="fnameAZ" id="name" placeholder="AZ" />
+    <input type="text" name="fnameEN" id="nameEN" placeholder="EN" /> <br />
+
+    <label for="lname">Surname: </label>
+    <input type="text" name="lnameAZ" id="lname" placeholder="AZ" />
+    <input type="text" name="lnameEN" id="lnameEN" placeholder="EN" /> <br />
+
+    <label for="email">Email: </label>
+    <input type="email" name="email" id="email" /> <br />
+
+    <label for="position">Position: </label>
+    <input type="text" name="position" id="position" />
+    <br />
+
+    <label for="eduactionYear">Education Year: </label>
+    <input type="number" name="eduYear" id="eduactionYear" /> <br />
+
+    <label for="eduactionUni">Educated University: </label>
+    <input
+      type="text"
+      name="eduUniversityAZ"
+      id="eduactionUni"
+      placeholder="AZ"
+    />
+    <input
+      type="text"
+      name="eduUniversityEN"
+      id="eduactionUniEN"
+      placeholder="EN"
+    />
+    <br />
+
+    <label for="eduactionFaculty">Educated Faculty: </label>
+    <input
+      type="text"
+      name="eduFacultyAZ"
+      id="eduactionFaculty"
+      placeholder="AZ"
+    />
+    <input
+      type="text"
+      name="eduFacultyEN"
+      id="eduactionFacultyEN"
+      placeholder="EN"
+    />
+    <br />
+
+    <label for="expYear">Experience Year: </label>
+    <input type="number" name="expYear" id="expYear" /> <br />
+
+    <label for="expPos">Experience Position: </label>
+    <input type="text" name="expPosition" id="expPos" />
+    <br />
+
+    <label for="expOrganization">Experence Organization: </label>
+    <input type="text" name="expOrganization" id="expOrganization" /> <br />
+
+    <label for="memberType">Member Type: </label>
+    <select name="memberType" id="memberType">
+      <option value="0">Partner</option>
+      <option value="1">Member</option>
+    </select>
+    <br />
+
+    <label for="image">Image: </label>
+    <input type="file" name="uploadedImage" id="image" /> <br />
+    <button type="submit">Send</button>
+  </form>
+</body>

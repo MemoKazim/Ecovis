@@ -1,0 +1,21 @@
+<%-include("eng/partials/header" , {title: title});-%>
+<body>
+  <form method="post" enctype="multipart/form-data" action="/uploadNew">
+    <label for="title">Title: </label>
+    <input type="text" name="titleAZ" id="title" placeholder="AZ" />
+    <input type="text" name="titleEN" id="titleEN" placeholder="EN" />
+    <br />
+
+    <label for="content">Content: </label>
+    <input type="text" name="contentAZ" id="content" placeholder="AZ" />
+    <input type="text" name="contentEN" id="contentEN" placeholder="EN" />
+    <br />
+
+    <label for="date">Date: </label>
+    <input type="date" name="date" id="date" /> <br />
+
+    <label for="image">Image: </label>
+    <input type="file" name="uploadedImage" id="image" /> <br />
+    <button type="submit">Send</button>
+  </form>
+</body>

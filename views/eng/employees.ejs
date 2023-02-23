@@ -1,0 +1,46 @@
+<%-include("partials/header" , {title: title});-%>
+<%-include("partials/navbar");-%>
+<body>
+  <section class="employees-section">
+    <%-include("partials/navigation" , {title: title});-%>
+    <div class="employees-header">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius error
+      repellendus voluptatem neque? Temporibus delectus ratione nulla veritatis
+      minus cum tempore voluptate, iusto atque quisquam dicta aut non molestias
+      exercitationem corporis aperiam reiciendis quidem amet provident fuga vel
+      sit ab fugiat earum!
+    </div>
+    <div class="all-members">
+      <h1>Partners</h1>
+      <div class="members">
+        <% AllMembers.forEach((member)=>{ if (!member.memberType) {%>
+        <div class="member">
+          <a href="/eng/employees/members/<%=member._id%>">
+            <img src="../uploads/<%=member.image.data%>" alt="member" />
+            <div class="member-name">
+              <%-member.fname.en-%> <%-member.lname.en-%>
+            </div>
+            <div class="member-position"><%-member.position-%></div>
+          </a>
+        </div>
+        <% }; %> <% }); %>
+      </div>
+      <h1>Our Team</h1>
+      <div class="members">
+        <% AllMembers.forEach((member)=>{ if (member.memberType) {%>
+        <div class="member">
+          <a href="/eng/employees/members/<%=member._id%>">
+            <img src="../uploads/<%=member.image.data%>" alt="member" />
+            <div class="member-name">
+              <%-member.fname.en-%> <%-member.lname.en-%>
+            </div>
+            <div class="member-position"><%-member.position-%></div>
+          </a>
+        </div>
+        <% }; %> <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <%-include("partials/footer");-%>
+</body>

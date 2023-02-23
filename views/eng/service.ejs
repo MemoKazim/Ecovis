@@ -1,0 +1,36 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navbar");-%>
+  <section class="about-section-1">
+    <a href="#" class="about-button">Planning a consultation</a>
+    <img
+      src="uploads/<%=service.image.data%>"
+      alt="about-image"
+      class="about-image"
+    />
+    <%-include("partials/navigation" , {title: title});-%>
+    <div class="about-content">
+      <span class="about-header"><%-service.name.en-%></span>
+      <p><%-service.details.en-%></p>
+    </div>
+    <div class="responsible-persons">
+      <h1>Responsible Persons</h1>
+      <div class="members">
+        <% members.forEach(member =>{
+        if(service.responsibleMembers.includes(member._id)){%>
+        <div class="member">
+          <a href="/eng/employees/members/<%=member._id%>">
+            <img src="../uploads/<%=member.image.data%>" alt="member" />
+            <div class="member-name">
+              <%-member.fname.en-%> <%-member.lname.en-%>
+            </div>
+            <div class="member-position"><%-member.position-%></div>
+          </a>
+        </div>
+        <% }}); %>
+      </div>
+    </div>
+  </section>
+
+  <%-include("partials/footer");-%>
+</body>
