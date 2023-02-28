@@ -305,159 +305,207 @@ app.get("/aze/contact", (req, res) => {
   res.render("aze/contact", { title: "Əlaqə" });
 });
 
+// ADMIN
+
+function adminAccess() {
+  app.get("/admin/:collection", (req, res) => {
+    let collection_names = [];
+    mongoose.connection.db.listCollections().toArray((err, collections) => {
+      collections.forEach((collection) => {
+        collection_names.push(collection.name);
+      });
+      res.render(`admin/${req.params.collection}`, {
+        title: req.params.collection,
+        collections: collection_names,
+      });
+    });
+  });
+  app.get("/admin/uploadMember", (req, res) => {
+    res.render("admin/uploadMember", { title: "Member" });
+  });
+
+  app.post(
+    "/admin/uploadMember",
+    upload.single("uploadedImage"),
+    (req, res) => {
+      const newMember = new Member({
+        fname: {
+          az: req.body.fnameAZ,
+          en: req.body.fnameEN,
+        },
+
+        lname: {
+          az: req.body.lnameAZ,
+          en: req.body.lnameEN,
+        },
+        email: req.body.email,
+        position: req.body.position,
+        image: {
+          data: req.file.filename,
+          contentType: "image/png",
+        },
+        memberType: req.body.memberType,
+        education: [
+          {
+            year: req.body.eduYear,
+            university: {
+              az: req.body.eduUniversityAZ,
+              en: req.body.eduUniversityEN,
+            },
+            faculty: {
+              az: req.body.eduFacultyAZ,
+              en: req.body.eduFacultyEN,
+            },
+          },
+        ],
+        experience: [
+          {
+            year: req.body.expYear,
+            position: req.body.expPosition,
+            organization: req.body.expOrganization,
+          },
+        ],
+      });
+      newMember
+        .save()
+        .then(() => {
+          console.log("Member saved in DB");
+          res.send("Member saved in DB");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  );
+  app.get("/admin/uploadPartner", (req, res) => {
+    res.render("admin/uploadPartner", { title: "Partner" });
+  });
+
+  app.post(
+    "/admin/uploadPartner",
+    upload.single("uploadedImage"),
+    (req, res) => {
+      const newPartner = new Partner({
+        name: req.body.name,
+        website: req.body.website,
+        details: {
+          az: req.body.detailsAZ,
+          en: req.body.detailsEN,
+        },
+        image: {
+          data: req.file.filename,
+          contentType: "image/png",
+        },
+      });
+      newPartner
+        .save()
+        .then(() => {
+          console.log("Partner saved in DB");
+          res.send("Partner saved in DB");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  );
+  app.get("/admin/uploadService", (req, res) => {
+    Member.find({}, (err, memberResult) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("uploadService", {
+          title: "Services",
+          members: memberResult,
+        });
+      }
+    });
+  });
+
+  app.post(
+    "/admin/uploadService",
+    upload.single("uploadedImage"),
+    (req, res) => {
+      const newService = new Service({
+        name: {
+          az: req.body.nameAZ,
+          en: req.body.nameEN,
+        },
+        details: {
+          az: req.body.detailsAZ,
+          en: req.body.detailsEN,
+        },
+        image: {
+          data: req.file.filename,
+          contentType: "image/png",
+        },
+        responsibleMembers: req.body.responsibleMembers,
+      });
+      newService
+        .save()
+        .then(() => {
+          console.log("Service saved in DB");
+          res.send("Service saved in DB");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  );
+
+  app.get("/admin/uploadNew", (req, res) => {
+    res.render("admin/uploadNew", { title: "New" });
+  });
+
+  app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
+    const newNew = new New({
+      title: {
+        az: req.body.titleAZ,
+        en: req.body.titleEN,
+      },
+      content: {
+        az: req.body.contentAZ,
+        en: req.body.contentEN,
+      },
+      date: req.body.date,
+      image: {
+        data: req.file.filename,
+        contentType: "image/png",
+      },
+    });
+    newNew
+      .save()
+      .then(() => {
+        console.log("New saved in DB");
+        res.send("New saved in DB");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+}
+
+app.get("/admin", (req, res) => {
+  res.render("admin/login", { title: "Log in" });
+});
+
+app.post("/admin", (req, res) => {
+  let collection_names = [];
+  if (req.body.username === "admin" && req.body.password === "admin") {
+    mongoose.connection.db.listCollections().toArray((err, collections) => {
+      collections.forEach((collection) => {
+        collection_names.push(collection.name);
+      });
+      res.render("admin/adminPanel", {
+        title: "",
+        collections: collection_names,
+      });
+    });
+    adminAccess();
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is open at ${PORT}`);
-});
-
-// UPLOAD SECTION
-
-app.get("/uploadMember", (req, res) => {
-  res.render("uploadMember", { title: "Admin Panel | Member" });
-});
-
-app.post("/uploadMember", upload.single("uploadedImage"), (req, res) => {
-  const newMember = new Member({
-    fname: {
-      az: req.body.fnameAZ,
-      en: req.body.fnameEN,
-    },
-
-    lname: {
-      az: req.body.lnameAZ,
-      en: req.body.lnameEN,
-    },
-    email: req.body.email,
-    position: req.body.position,
-    image: {
-      data: req.file.filename,
-      contentType: "image/png",
-    },
-    memberType: req.body.memberType,
-    education: [
-      {
-        year: req.body.eduYear,
-        university: {
-          az: req.body.eduUniversityAZ,
-          en: req.body.eduUniversityEN,
-        },
-        faculty: {
-          az: req.body.eduFacultyAZ,
-          en: req.body.eduFacultyEN,
-        },
-      },
-    ],
-    experience: [
-      {
-        year: req.body.expYear,
-        position: req.body.expPosition,
-        organization: req.body.expOrganization,
-      },
-    ],
-  });
-  newMember
-    .save()
-    .then(() => {
-      console.log("Member saved in DB");
-      res.send("Member saved in DB");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-app.get("/uploadPartner", (req, res) => {
-  res.render("uploadPartner", { title: "Admin Panel | Partner" });
-});
-
-app.post("/uploadPartner", upload.single("uploadedImage"), (req, res) => {
-  const newPartner = new Partner({
-    name: req.body.name,
-    website: req.body.website,
-    details: {
-      az: req.body.detailsAZ,
-      en: req.body.detailsEN,
-    },
-    image: {
-      data: req.file.filename,
-      contentType: "image/png",
-    },
-  });
-  newPartner
-    .save()
-    .then(() => {
-      console.log("Partner saved in DB");
-      res.send("Partner saved in DB");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-app.get("/uploadService", (req, res) => {
-  Member.find({}, (err, memberResult) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render("uploadService", {
-        title: "Admin Panel | Services",
-        members: memberResult,
-      });
-    }
-  });
-});
-
-app.post("/uploadService", upload.single("uploadedImage"), (req, res) => {
-  const newService = new Service({
-    name: {
-      az: req.body.nameAZ,
-      en: req.body.nameEN,
-    },
-    details: {
-      az: req.body.detailsAZ,
-      en: req.body.detailsEN,
-    },
-    image: {
-      data: req.file.filename,
-      contentType: "image/png",
-    },
-    responsibleMembers: req.body.responsibleMembers,
-  });
-  newService
-    .save()
-    .then(() => {
-      console.log("Service saved in DB");
-      res.send("Service saved in DB");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-app.get("/uploadNew", (req, res) => {
-  res.render("uploadNew", { title: "Admin Panel | New" });
-});
-
-app.post("/uploadNew", upload.single("uploadedImage"), (req, res) => {
-  const newNew = new New({
-    title: {
-      az: req.body.titleAZ,
-      en: req.body.titleEN,
-    },
-    content: {
-      az: req.body.contentAZ,
-      en: req.body.contentEN,
-    },
-    date: req.body.date,
-    image: {
-      data: req.file.filename,
-      contentType: "image/png",
-    },
-  });
-  newNew
-    .save()
-    .then(() => {
-      console.log("New saved in DB");
-      res.send("New saved in DB");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 });
