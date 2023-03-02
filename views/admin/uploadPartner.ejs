@@ -1,6 +1,10 @@
 <%-include("partials/header" , {title: title});-%>
 <body>
-  <form method="post" enctype="multipart/form-data" action="/uploadPartner">
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action="/admin/uploadPartner"
+  >
     <label for="name">Name: </label>
     <input type="text" name="name" id="name" /> <br />
 

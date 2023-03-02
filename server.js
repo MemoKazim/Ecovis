@@ -3,11 +3,29 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const session = require("express-session");
+const passport = require("passport");
+// const bcrypt = require("bcrypt");
+const passportLocalMongoose = require("passport-local-mongoose");
 const PORT = 8080;
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // DATABASE CONNECT
 mongoose.set("strictQuery", true);
@@ -32,8 +50,13 @@ const Member = require("./models/member");
 const Partner = require("./models/partner");
 const Service = require("./models/service");
 const New = require("./models/new");
+const User = require("./models/user");
 
 const upload = multer({ dest: "public/uploads/" });
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get("/", (req, res) => {
   res.redirect("/eng/index");
@@ -307,108 +330,104 @@ app.get("/aze/contact", (req, res) => {
 
 // ADMIN
 
-function adminAccess() {
-  app.get("/admin/:collection", (req, res) => {
-    let collection_names = [];
-    mongoose.connection.db.listCollections().toArray((err, collections) => {
-      collections.forEach((collection) => {
-        collection_names.push(collection.name);
-      });
-      res.render(`admin/${req.params.collection}`, {
-        title: req.params.collection,
-        collections: collection_names,
-      });
-    });
-  });
-  app.get("/admin/uploadMember", (req, res) => {
+app.get("/admin/uploadMember", (req, res) => {
+  if (req.isAuthenticated()) {
     res.render("admin/uploadMember", { title: "Member" });
-  });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
-  app.post(
-    "/admin/uploadMember",
-    upload.single("uploadedImage"),
-    (req, res) => {
-      const newMember = new Member({
-        fname: {
-          az: req.body.fnameAZ,
-          en: req.body.fnameEN,
-        },
+app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
+  if (req.isAuthenticated()) {
+    const newMember = new Member({
+      fname: {
+        az: req.body.fnameAZ,
+        en: req.body.fnameEN,
+      },
 
-        lname: {
-          az: req.body.lnameAZ,
-          en: req.body.lnameEN,
-        },
-        email: req.body.email,
-        position: req.body.position,
-        image: {
-          data: req.file.filename,
-          contentType: "image/png",
-        },
-        memberType: req.body.memberType,
-        education: [
-          {
-            year: req.body.eduYear,
-            university: {
-              az: req.body.eduUniversityAZ,
-              en: req.body.eduUniversityEN,
-            },
-            faculty: {
-              az: req.body.eduFacultyAZ,
-              en: req.body.eduFacultyEN,
-            },
+      lname: {
+        az: req.body.lnameAZ,
+        en: req.body.lnameEN,
+      },
+      email: req.body.email,
+      position: req.body.position,
+      image: {
+        data: req.file.filename,
+        contentType: "image/png",
+      },
+      memberType: req.body.memberType,
+      education: [
+        {
+          year: req.body.eduYear,
+          university: {
+            az: req.body.eduUniversityAZ,
+            en: req.body.eduUniversityEN,
           },
-        ],
-        experience: [
-          {
-            year: req.body.expYear,
-            position: req.body.expPosition,
-            organization: req.body.expOrganization,
+          faculty: {
+            az: req.body.eduFacultyAZ,
+            en: req.body.eduFacultyEN,
           },
-        ],
+        },
+      ],
+      experience: [
+        {
+          year: req.body.expYear,
+          position: req.body.expPosition,
+          organization: req.body.expOrganization,
+        },
+      ],
+    });
+    newMember
+      .save()
+      .then(() => {
+        console.log("Member saved in DB");
+        res.send("Member saved in DB");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      newMember
-        .save()
-        .then(() => {
-          console.log("Member saved in DB");
-          res.send("Member saved in DB");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  );
-  app.get("/admin/uploadPartner", (req, res) => {
+  } else {
+    res.redirect("/admin");
+  }
+});
+app.get("/admin/uploadPartner", (req, res) => {
+  if (req.isAuthenticated()) {
     res.render("admin/uploadPartner", { title: "Partner" });
-  });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
-  app.post(
-    "/admin/uploadPartner",
-    upload.single("uploadedImage"),
-    (req, res) => {
-      const newPartner = new Partner({
-        name: req.body.name,
-        website: req.body.website,
-        details: {
-          az: req.body.detailsAZ,
-          en: req.body.detailsEN,
-        },
-        image: {
-          data: req.file.filename,
-          contentType: "image/png",
-        },
+app.post("/admin/uploadPartner", upload.single("uploadedImage"), (req, res) => {
+  if (req.isAuthenticated()) {
+    const newPartner = new Partner({
+      name: req.body.name,
+      website: req.body.website,
+      details: {
+        az: req.body.detailsAZ,
+        en: req.body.detailsEN,
+      },
+      image: {
+        data: req.file.filename,
+        contentType: "image/png",
+      },
+    });
+    newPartner
+      .save()
+      .then(() => {
+        console.log("Partner saved in DB");
+        res.send("Partner saved in DB");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      newPartner
-        .save()
-        .then(() => {
-          console.log("Partner saved in DB");
-          res.send("Partner saved in DB");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  );
-  app.get("/admin/uploadService", (req, res) => {
+  } else {
+    res.redirect("/admin");
+  }
+});
+app.get("/admin/uploadService", (req, res) => {
+  if (req.isAuthenticated()) {
     Member.find({}, (err, memberResult) => {
       if (err) {
         console.log(err);
@@ -419,44 +438,52 @@ function adminAccess() {
         });
       }
     });
-  });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
-  app.post(
-    "/admin/uploadService",
-    upload.single("uploadedImage"),
-    (req, res) => {
-      const newService = new Service({
-        name: {
-          az: req.body.nameAZ,
-          en: req.body.nameEN,
-        },
-        details: {
-          az: req.body.detailsAZ,
-          en: req.body.detailsEN,
-        },
-        image: {
-          data: req.file.filename,
-          contentType: "image/png",
-        },
-        responsibleMembers: req.body.responsibleMembers,
+app.post("/admin/uploadService", upload.single("uploadedImage"), (req, res) => {
+  if (req.isAuthenticated()) {
+    const newService = new Service({
+      name: {
+        az: req.body.nameAZ,
+        en: req.body.nameEN,
+      },
+      details: {
+        az: req.body.detailsAZ,
+        en: req.body.detailsEN,
+      },
+      image: {
+        data: req.file.filename,
+        contentType: "image/png",
+      },
+      responsibleMembers: req.body.responsibleMembers,
+    });
+    newService
+      .save()
+      .then(() => {
+        console.log("Service saved in DB");
+        res.send("Service saved in DB");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      newService
-        .save()
-        .then(() => {
-          console.log("Service saved in DB");
-          res.send("Service saved in DB");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  );
+  } else {
+    res.redirect("/admin");
+  }
+});
 
-  app.get("/admin/uploadNew", (req, res) => {
+app.get("/admin/uploadNew", (req, res) => {
+  if (req.isAuthenticated()) {
     res.render("admin/uploadNew", { title: "New" });
-  });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
-  app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
+app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
+  if (req.isAuthenticated()) {
     const newNew = new New({
       title: {
         az: req.body.titleAZ,
@@ -481,28 +508,68 @@ function adminAccess() {
       .catch((err) => {
         console.log(err);
       });
-  });
-}
+  } else {
+    res.redirect("/admin");
+  }
+});
 
 app.get("/admin", (req, res) => {
   res.render("admin/login", { title: "Log in" });
 });
 
 app.post("/admin", (req, res) => {
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
+  });
   let collection_names = [];
-  if (req.body.username === "admin" && req.body.password === "admin") {
+  req.login(user, function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      passport.authenticate("local", {
+        failureRedirect: "/admin",
+        failureMessage: true,
+      })(
+        req,
+        res,
+        mongoose.connection.db.listCollections().toArray((err, collections) => {
+          collections.forEach((collection) => {
+            collection_names.push(collection.name);
+          });
+          res.status(200).render("admin/adminPanel", {
+            title: "",
+            collections: collection_names,
+          });
+        })
+      );
+    }
+  });
+});
+app.get("/admin/:collection", (req, res) => {
+  if (req.isAuthenticated()) {
+    let collection_names = [];
     mongoose.connection.db.listCollections().toArray((err, collections) => {
       collections.forEach((collection) => {
         collection_names.push(collection.name);
       });
-      res.render("admin/adminPanel", {
-        title: "",
-        collections: collection_names,
+      eval(
+        req.params.collection.charAt(0).toUpperCase() +
+          req.params.collection.slice(1, -1)
+      ).find({}, (error, resultCollection) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.render(`admin/${req.params.collection}`, {
+            title: req.params.collection,
+            collections: collection_names,
+            current: resultCollection,
+          });
+        }
       });
     });
-    adminAccess();
   } else {
-    res.sendStatus(401);
+    res.redirect("/admin");
   }
 });
 
