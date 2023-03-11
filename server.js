@@ -527,12 +527,7 @@ app.post("/admin", (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      passport.authenticate("local", {
-        failureRedirect: "/admin",
-        failureMessage: true,
-      })(
-        req,
-        res,
+      passport.authenticate("local")(req, res, () => {
         mongoose.connection.db.listCollections().toArray((err, collections) => {
           collections.forEach((collection) => {
             collection_names.push(collection.name);
@@ -541,8 +536,8 @@ app.post("/admin", (req, res) => {
             title: "",
             collections: collection_names,
           });
-        })
-      );
+        });
+      });
     }
   });
 });
