@@ -29,7 +29,7 @@
           <div class="position-relative">
             <img
               class="rounded-circle"
-              src="../images/user.jpg"
+              src="../images/admin.png"
               alt=""
               style="width: 40px; height: 40px"
             />
@@ -67,8 +67,10 @@
     <div class="content">
       <div class="col-sm-11 m-lg-4">
         <div class="bg-secondary rounded h-100 p-4">
-          <h6><%-title-%> table</h6>
-          <a href="/admin/uploadMember" class="upload-buttons">Upload Member</a>
+          <h6 class="mb-4"><%-title-%> table</h6>
+          <a href="/admin/uploadMember" class="upload-buttons btn btn-success"
+            >Upload Member</a
+          >
           <div class="table-responsive">
             <table class="table">
               <thead>
@@ -86,29 +88,58 @@
                 </tr>
               </thead>
               <tbody>
-                <%let counter = 1%> <%console.log(collections)%>
-                <%current.forEach((member)=>{%>
+                <%let counter = 1%> <%current.forEach((member)=>{%>
                 <tr>
-                  <th scope="row"><%-counter-%></th>
-                  <td><%-member.fname.en-%></td>
-                  <td><%-member.lname.en-%></td>
-                  <td><%-member.email-%></td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-counter-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-member.fname.en-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-member.lname.en-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-member.email-%>
+                  </td>
                   <%if (member.memberType) { %>
-                  <td>Partner</td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    Partner
+                  </td>
                   <%} else { %>
-                  <td>Team Member</td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    Team Member
+                  </td>
                   <%}%>
-                  <td><%-member.position-%></td>
-                  <td>[Array]</td>
-                  <td>[Array]</td>
-                  <td><%-member.image.data-%></td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-member.position-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    [Array]
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    [Array]
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-member.image.data-%>
+                  </td>
                   <td>
                     <table class="table">
                       <tr>
-                        <a href="/admin/deleteMember/<%=member._id%>">Delete</a>
+                        <a
+                          href="/admin/deleteMember/<%=member._id%>"
+                          class="btn btn-danger"
+                          >Delete</a
+                        >
                       </tr>
+                      <br />
+                      <br />
                       <tr>
-                        <a href="/admin/updateMember/<%=member._id%>">Update</a>
+                        <a
+                          href="/admin/updateMember/<%=member._id%>"
+                          class="btn btn-warning"
+                          >Update</a
+                        >
                       </tr>
                     </table>
                   </td>

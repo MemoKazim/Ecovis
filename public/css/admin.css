@@ -286,3 +286,14 @@
   right: 8rem;
   top: 3rem;
 }
+
+td {
+  height: max-content;
+  vertical-align: middle;
+  width: max-content;
+}
+td,
+th {
+  white-space: nowrap;
+  overflow: hidden;
+}

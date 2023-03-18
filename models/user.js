@@ -6,9 +6,13 @@ const userSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-  password: {
+  hashed_password: {
     require: true,
-    type: String,
+    type: Buffer,
+  },
+  Salt: {
+    require: true,
+    type: Buffer,
   },
 });
 

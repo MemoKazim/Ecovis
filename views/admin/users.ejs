@@ -29,7 +29,7 @@
             <div class="position-relative">
               <img
                 class="rounded-circle"
-                src="../images/user.jpg"
+                src="../images/admin.png"
                 alt=""
                 style="width: 40px; height: 40px"
               />
@@ -73,6 +73,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Username</th>
                     <th scope="col">Password</th>
+                    <th scope="col">Salt</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,7 +82,8 @@
                   <tr>
                     <th scope="row"><%-counter-%></th>
                     <td><%-user.username-%></td>
-                    <td><%-user.password-%></td>
+                    <td><%-user.hashed_password-%></td>
+                    <td><%-user.Salt-%></td>
                   </tr>
                   <%counter = counter + 1; });%>
                 </tbody>

@@ -1,3 +1,8 @@
+//
+// ===================================================================
+// ============================ LIBRARIES ============================
+// ===================================================================
+//
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -5,8 +10,9 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const session = require("express-session");
 const passport = require("passport");
-// const bcrypt = require("bcrypt");
-const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require("passport-local");
+const crypto = require("crypto");
+const pbkdf2 = require("pbkdf2");
 const PORT = 8080;
 const app = express();
 app.set("view engine", "ejs");
@@ -27,16 +33,14 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// DATABASE CONNECT
+//
+// ===================================================================
+// ============================= DATABASE ============================
+// ===================================================================
+//
+
 mongoose.set("strictQuery", true);
-new mongoose.connect(
-  "mongodb+srv://" +
-    process.env.MONGO_USR +
-    ":" +
-    process.env.MONGO_PASS +
-    "@ecovisdb.ln5ss4p.mongodb.net/" +
-    process.env.MONGO_DB_NAME
-)
+new mongoose.connect(process.env.MONGO_DB)
   .then(() => {
     console.log("DB successfully connected!");
   })
@@ -44,7 +48,12 @@ new mongoose.connect(
     console.log(err);
   });
 
-// MODELS
+//
+// ===================================================================
+// ============================== MODEL ==============================
+// ===================================================================
+//
+
 const Contact = require("./models/contact");
 const Member = require("./models/member");
 const Partner = require("./models/partner");
@@ -54,9 +63,14 @@ const User = require("./models/user");
 
 const upload = multer({ dest: "public/uploads/" });
 
-passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+//
+// ===================================================================
+// =============================== ENG ===============================
+// ===================================================================
+//
 
 app.get("/", (req, res) => {
   res.redirect("/eng/index");
@@ -196,7 +210,11 @@ app.get("/eng/contact", (req, res) => {
   res.render("eng/contact", { title: "Contact" });
 });
 
-// AZE PATTERNS
+//
+// ===================================================================
+// =============================== AZE ===============================
+// ===================================================================
+//
 
 app.get("/aze/index", (req, res) => {
   Partner.find({}, (err, partnerResult) => {
@@ -328,7 +346,103 @@ app.get("/aze/contact", (req, res) => {
   res.render("aze/contact", { title: "Əlaqə" });
 });
 
-// ADMIN
+//
+// ===================================================================
+// ============================== ADMIN ==============================
+// ===================================================================
+//
+
+passport.use(
+  new LocalStrategy(function verify(username, password, cb) {
+    User.findOne({ username: username }, function (err, row) {
+      if (err) {
+        return cb(err);
+      }
+      if (!row) {
+        return cb(null, false, {
+          message: "Incorrect username or password.",
+        });
+      }
+      crypto.pbkdf2(
+        password,
+        row.Salt,
+        2023,
+        32,
+        "sha512",
+        function (err, hashedPassword) {
+          if (err) {
+            return cb(err);
+          }
+          if (!crypto.timingSafeEqual(row.hashed_password, hashedPassword)) {
+            return cb(null, false, {
+              message: "Incorrect username or password.",
+            });
+          }
+          return cb(null, row);
+        }
+      );
+    });
+  })
+);
+
+app.get("/admin", (req, res) => {
+  res.render("admin/login", { title: "Log in" });
+});
+
+app.post(
+  "/admin",
+  passport.authenticate("local", {
+    successRedirect: "/admin/users",
+    failureRedirect: "/admin",
+  })
+);
+app.get("/admin/:collection", (req, res) => {
+  if (req.isAuthenticated()) {
+    let collection_names = [];
+    mongoose.connection.db.listCollections().toArray((err, collections) => {
+      collections.forEach((collection) => {
+        collection_names.push(collection.name);
+      });
+      eval(
+        req.params.collection.charAt(0).toUpperCase() +
+          req.params.collection.slice(1, -1)
+      ).find({}, (error, resultCollection) => {
+        if (error) {
+          console.log(error);
+        } else {
+          if (req.params.collection == "services") {
+            Member.find({}, (err, resultMember) => {
+              if (err) {
+                console.log(err);
+              } else {
+                res.render(`admin/services`, {
+                  title: req.params.collection,
+                  collections: collection_names,
+                  current: resultCollection,
+                  members_data: resultMember,
+                });
+              }
+            });
+          } else {
+            res.render(`admin/${req.params.collection}`, {
+              title: req.params.collection,
+              collections: collection_names,
+              current: resultCollection,
+            });
+          }
+        }
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+//
+// ====================================================================
+// ============================== CREATE ==============================
+// ====================================================================
+//
 
 app.get("/admin/uploadMember", (req, res) => {
   if (req.isAuthenticated()) {
@@ -513,61 +627,40 @@ app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
   }
 });
 
-app.get("/admin", (req, res) => {
-  res.render("admin/login", { title: "Log in" });
-});
+//
+// ====================================================================
+// ============================== DELETE ==============================
+// ====================================================================
+//
 
-app.post("/admin", (req, res) => {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password,
-  });
-  let collection_names = [];
-  req.login(user, function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("local")(req, res, () => {
-        mongoose.connection.db.listCollections().toArray((err, collections) => {
-          collections.forEach((collection) => {
-            collection_names.push(collection.name);
-          });
-          res.status(200).render("admin/adminPanel", {
-            title: "",
-            collections: collection_names,
-          });
-        });
-      });
-    }
-  });
-});
-app.get("/admin/:collection", (req, res) => {
-  if (req.isAuthenticated()) {
-    let collection_names = [];
-    mongoose.connection.db.listCollections().toArray((err, collections) => {
-      collections.forEach((collection) => {
-        collection_names.push(collection.name);
-      });
-      eval(
-        req.params.collection.charAt(0).toUpperCase() +
-          req.params.collection.slice(1, -1)
-      ).find({}, (error, resultCollection) => {
-        if (error) {
-          console.log(error);
-        } else {
-          res.render(`admin/${req.params.collection}`, {
-            title: req.params.collection,
-            collections: collection_names,
-            current: resultCollection,
-          });
-        }
-      });
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
+//
+
+//
+// ====================================================================
+// ============================== UPDATE ==============================
+// ====================================================================
+//
 
 app.listen(PORT, () => {
   console.log(`Server is open at ${PORT}`);
 });
+
+// app.get("/register", (req, res) => {
+//   res.render("admin/login_tmp");
+// });
+// app.post("/register", (req, res) => {
+//   const salt = crypto.randomBytes(32);
+//   const user = new User({
+//     username: req.body.usrname,
+//     hashed_password: pbkdf2.pbkdf2Sync(
+//       req.body.passwd,
+//       salt,
+//       2023,
+//       32,
+//       "sha512"
+//     ),
+//     Salt: salt,
+//   });
+//   user.save();
+//   res.send("User saved!");
+// });
