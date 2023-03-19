@@ -78,17 +78,54 @@
                   <th scope="col">Email</th>
                   <th scope="col">Number</th>
                   <th scope="col">Message</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <%let counter = 1%> <%current.forEach((contact)=>{%>
                 <tr>
-                  <th scope="row"><%-counter-%></th>
-                  <td><%-contact.firstName-%></td>
-                  <td><%-contact.lastName-%></td>
-                  <td><%-contact.email-%></td>
-                  <td><%-contact.phoneNumber-%></td>
-                  <td><%-contact.message-%></td>
+                  <td
+                    class="text-truncate"
+                    style="max-width: 150px"
+                    scope="row"
+                  >
+                    <%-counter-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-contact.firstName-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-contact.lastName-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-contact.email-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-contact.phoneNumber-%>
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px">
+                    <%-String(contact.message);-%>
+                  </td>
+                  <td>
+                    <table class="table">
+                      <tr>
+                        <a
+                          href="/admin/deleteContact/<%=contact._id%>"
+                          class="btn btn-danger m-1"
+                          >Delete</a
+                        >
+                        <br />
+                      </tr>
+
+                      <tr>
+                        <a
+                          href="/admin/details/<%=contact._id%>"
+                          class="btn btn-info m-1"
+                          >Details</a
+                        >
+                      </tr>
+                    </table>
+                  </td>
                 </tr>
                 <%counter = counter + 1; });%>
               </tbody>

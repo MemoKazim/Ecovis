@@ -13,6 +13,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const crypto = require("crypto");
 const pbkdf2 = require("pbkdf2");
+const validator = require("validator");
 const PORT = 8080;
 const app = express();
 app.set("view engine", "ejs");
@@ -94,11 +95,11 @@ app.get("/eng/index", (req, res) => {
 
 app.post("/eng/success", (req, res) => {
   const contact = new Contact({
-    firstName: req.body.fname,
-    lastName: req.body.lname,
-    email: req.body.email,
-    phoneNumber: req.body.phone,
-    message: req.body.message,
+    firstName: validator.escape(req.body.fname),
+    lastName: validator.escape(req.body.lname),
+    email: validator.escape(req.body.email),
+    phoneNumber: validator.escape(req.body.phone),
+    message: validator.escape(req.body.message),
   });
   contact
     .save()
@@ -230,11 +231,11 @@ app.get("/aze/index", (req, res) => {
 
 app.post("/aze/success", (req, res) => {
   const contact = new Contact({
-    firstName: req.body.fname,
-    lastName: req.body.lname,
-    email: req.body.email,
-    phoneNumber: req.body.phone,
-    message: req.body.message,
+    firstName: validator.escape(req.body.fname),
+    lastName: validator.escape(req.body.lname),
+    email: validator.escape(req.body.email),
+    phoneNumber: validator.escape(req.body.phone),
+    message: validator.escape(req.body.message),
   });
   contact
     .save()

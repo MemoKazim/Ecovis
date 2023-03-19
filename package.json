@@ -23,6 +23,7 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.1.2",
-    "pbkdf2": "^3.1.2"
+    "pbkdf2": "^3.1.2",
+    "validator": "^13.9.0"
   }
 }
