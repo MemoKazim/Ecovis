@@ -1,6 +1,12 @@
 <%-include("partials/header" , {title: title});-%>
 <body>
-  <form method="post" enctype="multipart/form-data" action="/uploadMember">
+  <%-include("partials/navigator" , {title: title});-%>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action="/admin/uploadMember"
+  >
+    <h3 class="primary-text">Upload Member</h3>
     <label for="name">Name: </label>
     <input type="text" name="fnameAZ" id="name" placeholder="AZ" />
     <input type="text" name="fnameEN" id="nameEN" placeholder="EN" /> <br />
@@ -15,50 +21,30 @@
     <label for="position">Position: </label>
     <input type="text" name="position" id="position" />
     <br />
+    <div id="education">
+      <span> EDUCATION </span>
+      <button onclick="addEdu()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path
+            fill="#EB1616"
+            d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+          />
+        </svg>
+      </button>
+    </div>
 
-    <label for="eduactionYear">Education Year: </label>
-    <input type="number" name="eduYear" id="eduactionYear" /> <br />
-
-    <label for="eduactionUni">Educated University: </label>
-    <input
-      type="text"
-      name="eduUniversityAZ"
-      id="eduactionUni"
-      placeholder="AZ"
-    />
-    <input
-      type="text"
-      name="eduUniversityEN"
-      id="eduactionUniEN"
-      placeholder="EN"
-    />
+    <div id="experience">
+      <span> EXPERIENCE </span>
+      <button onclick="addExp()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path
+            fill="#EB1616"
+            d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+          />
+        </svg>
+      </button>
+    </div>
     <br />
-
-    <label for="eduactionFaculty">Educated Faculty: </label>
-    <input
-      type="text"
-      name="eduFacultyAZ"
-      id="eduactionFaculty"
-      placeholder="AZ"
-    />
-    <input
-      type="text"
-      name="eduFacultyEN"
-      id="eduactionFacultyEN"
-      placeholder="EN"
-    />
-    <br />
-
-    <label for="expYear">Experience Year: </label>
-    <input type="number" name="expYear" id="expYear" /> <br />
-
-    <label for="expPos">Experience Position: </label>
-    <input type="text" name="expPosition" id="expPos" />
-    <br />
-
-    <label for="expOrganization">Experence Organization: </label>
-    <input type="text" name="expOrganization" id="expOrganization" /> <br />
-
     <label for="memberType">Member Type: </label>
     <select name="memberType" id="memberType">
       <option value="0">Partner</option>
@@ -70,4 +56,70 @@
     <input type="file" name="uploadedImage" id="image" /> <br />
     <button type="submit">Send</button>
   </form>
+  <script>
+    function addEdu() {
+      // ==================== EDU ====================
+      let eduYear = document.createElement("INPUT");
+      eduYear.setAttribute("type", "number");
+      eduYear.setAttribute("name", "eduYear");
+      eduYear.setAttribute("placeholder", "Graduate year");
+      eduYear.setAttribute("style", "width: 100%");
+      // =============================================
+      let uniAZ = document.createElement("INPUT");
+      uniAZ.setAttribute("type", "text");
+      uniAZ.setAttribute("name", "eduUniversityAZ");
+      uniAZ.setAttribute("placeholder", "Unveristet");
+      uniAZ.setAttribute("style", "width: 100%");
+      let uniEN = document.createElement("INPUT");
+      uniEN.setAttribute("type", "text");
+      uniEN.setAttribute("name", "eduUniversityEN");
+      uniEN.setAttribute("placeholder", "University");
+      uniEN.setAttribute("style", "width: 100%");
+      // =============================================
+      let facAZ = document.createElement("INPUT");
+      facAZ.setAttribute("type", "text");
+      facAZ.setAttribute("name", "eduFacultyAZ");
+      facAZ.setAttribute("placeholder", "Fakultə");
+      facAZ.setAttribute("style", "width: 100%");
+      let facEN = document.createElement("INPUT");
+      facEN.setAttribute("type", "text");
+      facEN.setAttribute("name", "eduFacultyEN");
+      facEN.setAttribute("placeholder", "Faculty");
+      facEN.setAttribute("style", "width: 100%");
+      // =============================================
+      let elementsUni = [eduYear, uniAZ, uniEN, facAZ, facEN];
+      elementsUni.forEach((element) => {
+        document.getElementById("education").appendChild(element);
+      });
+      let br = document.createElement("br");
+      document.getElementById("education").appendChild(br);
+    }
+    function addExp() {
+      // ==================== EXP ====================
+      let a1 = document.createElement("INPUT");
+      a1.setAttribute("type", "number");
+      a1.setAttribute("name", "expYear");
+      a1.setAttribute("placeholder", "Year");
+      a1.setAttribute("style", "width: 100%");
+      // =============================================
+      let b1 = document.createElement("INPUT");
+      b1.setAttribute("type", "text");
+      b1.setAttribute("name", "expPosition");
+      b1.setAttribute("placeholder", "Position");
+      b1.setAttribute("style", "width: 100%");
+      // =============================================
+      let c1 = document.createElement("INPUT");
+      c1.setAttribute("type", "text");
+      c1.setAttribute("name", "expOrganization");
+      c1.setAttribute("placeholder", "Organization");
+      c1.setAttribute("style", "width: 100%");
+      // =============================================
+      let elementsExp = [a1, b1, c1];
+      elementsExp.forEach((element) => {
+        document.getElementById("experience").appendChild(element);
+      });
+      let br = document.createElement("br");
+      document.getElementById("experience").appendChild(br);
+    }
+  </script>
 </body>

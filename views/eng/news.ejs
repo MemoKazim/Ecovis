@@ -4,7 +4,9 @@
   <section class="news-section">
     <%-include("partials/navigation" , {title: title});-%>
     <div class="news-container">
-      <% news.forEach( (new_element) => { %>
+      <% const sorted_news=news.sort((objA,
+      objB)=>Number(objB.date)-Number(objA.date)); %> <% sorted_news.forEach(
+      (new_element) => { %>
       <div class="new">
         <div class="new-date">
           <div class="date-day"><%-new_element.date.getDate()-%></div>

@@ -297,3 +297,55 @@ th {
   white-space: nowrap;
   overflow: hidden;
 }
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+body > a {
+  margin: 1rem;
+  background-color: #fff;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100% !important;
+}
+body > form {
+  align-self: center;
+  width: 30%;
+}
+
+form > * {
+  display: block;
+  width: 100%;
+}
+
+form {
+  margin-bottom: 3rem;
+}
+
+#education,
+#experience {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#education > *,
+#experience > * {
+  display: block;
+}
+
+#education button,
+#experience button {
+  border: none;
+  background-color: inherit;
+}
+
+#education svg,
+#experience svg {
+  width: 2rem;
+  height: 2rem;
+}

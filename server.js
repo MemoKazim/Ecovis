@@ -397,47 +397,6 @@ app.post(
     failureRedirect: "/admin",
   })
 );
-app.get("/admin/:collection", (req, res) => {
-  if (req.isAuthenticated()) {
-    let collection_names = [];
-    mongoose.connection.db.listCollections().toArray((err, collections) => {
-      collections.forEach((collection) => {
-        collection_names.push(collection.name);
-      });
-      eval(
-        req.params.collection.charAt(0).toUpperCase() +
-          req.params.collection.slice(1, -1)
-      ).find({}, (error, resultCollection) => {
-        if (error) {
-          console.log(error);
-        } else {
-          if (req.params.collection == "services") {
-            Member.find({}, (err, resultMember) => {
-              if (err) {
-                console.log(err);
-              } else {
-                res.render(`admin/services`, {
-                  title: req.params.collection,
-                  collections: collection_names,
-                  current: resultCollection,
-                  members_data: resultMember,
-                });
-              }
-            });
-          } else {
-            res.render(`admin/${req.params.collection}`, {
-              title: req.params.collection,
-              collections: collection_names,
-              current: resultCollection,
-            });
-          }
-        }
-      });
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
 
 //
 // ====================================================================
@@ -472,32 +431,31 @@ app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
         contentType: "image/png",
       },
       memberType: req.body.memberType,
-      education: [
-        {
-          year: req.body.eduYear,
-          university: {
-            az: req.body.eduUniversityAZ,
-            en: req.body.eduUniversityEN,
-          },
-          faculty: {
-            az: req.body.eduFacultyAZ,
-            en: req.body.eduFacultyEN,
-          },
-        },
-      ],
-      experience: [
-        {
-          year: req.body.expYear,
-          position: req.body.expPosition,
-          organization: req.body.expOrganization,
-        },
-      ],
     });
+    for (let i = 0; i < req.body.eduYear.length; i++) {
+      newMember.education.push({
+        year: req.body.eduYear[i],
+        university: {
+          az: req.body.eduUniversityAZ[i],
+          en: req.body.eduUniversityEN[i],
+        },
+        faculty: {
+          az: req.body.eduFacultyAZ[i],
+          en: req.body.eduFacultyEN[i],
+        },
+      });
+    }
+    for (let i = 0; i < req.body.expYear.length; i++) {
+      newMember.experience.push({
+        year: req.body.expYear[i],
+        position: req.body.expPosition[i],
+        organization: req.body.expOrganization[i],
+      });
+    }
     newMember
       .save()
       .then(() => {
-        console.log("Member saved in DB");
-        res.send("Member saved in DB");
+        res.send("Member added to DB successfully :) ");
       })
       .catch((err) => {
         console.log(err);
@@ -547,8 +505,8 @@ app.get("/admin/uploadService", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        res.render("uploadService", {
-          title: "Services",
+        res.render("admin/uploadService", {
+          title: "Service",
           members: memberResult,
         });
       }
@@ -641,6 +599,46 @@ app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
 // ============================== UPDATE ==============================
 // ====================================================================
 //
+
+//
+
+//
+// ====================================================================
+// =============================== READ ===============================
+// ====================================================================
+//
+
+app.get("/admin/:collection", (req, res) => {
+  if (req.isAuthenticated()) {
+    let collection_names = [];
+    mongoose.connection.db.listCollections().toArray((err, collections) => {
+      collections.forEach((collection) => {
+        collection_names.push(collection.name);
+      });
+      eval(
+        req.params.collection.charAt(0).toUpperCase() +
+          req.params.collection.slice(1, -1)
+      ).find({}, (error, resultCollection) => {
+        if (error) {
+          console.log(error);
+        } else {
+          Member.find({}, (err, resultMember) => {
+            res.render(`admin/${req.params.collection}`, {
+              title:
+                req.params.collection.charAt(0).toUpperCase() +
+                req.params.collection.slice(1),
+              collections: collection_names,
+              current: resultCollection,
+              members_data: resultMember,
+            });
+          });
+        }
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is open at ${PORT}`);

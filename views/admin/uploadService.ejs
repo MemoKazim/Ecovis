@@ -1,5 +1,7 @@
 <%-include("partials/header" , {title: title});-%>
 <body>
+  <%-include("partials/navigator" , {title: title});-%>
+
   <script>
     $(document).ready(() => {
       $("#responsibleMembers").CreateMultiCheckBox({
@@ -9,7 +11,11 @@
       });
     });
   </script>
-  <form method="post" enctype="multipart/form-data" action="/uploadService">
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action="/admin/uploadService"
+  >
     <label for="name">Name: </label>
     <input type="text" name="nameAZ" id="name" placeholder="AZ" />
     <input type="text" name="nameEN" id="nameEN" placeholder="EN" />
