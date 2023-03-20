@@ -592,7 +592,80 @@ app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
 // ====================================================================
 //
 
-//
+app.get("/admin/deleteMember/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Member.findByIdAndRemove(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`Member should be deleted ${req.params.id}`);
+        res.redirect("/admin/members");
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/deletePartner/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Partner.findByIdAndRemove(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`Partner should be deleted ${req.params.id}`);
+        res.redirect("/admin/partners");
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/deleteService/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Service.findByIdAndRemove(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`Service should be deleted ${req.params.id}`);
+        res.redirect("/admin/services");
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/deleteNew/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    New.findByIdAndRemove(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`New should be deleted ${req.params.id}`);
+        res.redirect("/admin/news");
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/deleteContact/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Contact.findByIdAndRemove(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`Contact should be deleted ${req.params.id}`);
+        res.redirect("/admin/contacts");
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
 
 //
 // ====================================================================
