@@ -411,3 +411,9 @@ form {
   left: 24px;
   color: #fff;
 }
+
+#uploadedImage {
+  border: #ffffff 1px solid;
+  background-position: center;
+  background-size: cover;
+}

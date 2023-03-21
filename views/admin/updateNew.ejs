@@ -1,0 +1,77 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navigator" , {title: title});-%>
+
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action="/admin/update/New/<%=current._id%>"
+  >
+    <label for="title">Title: </label>
+    <input
+      type="text"
+      name="titleAZ"
+      id="title"
+      value="<%=current.title.az%>"
+    />
+    <input
+      type="text"
+      name="titleEN"
+      id="titleEN"
+      value="<%=current.title.en%>"
+    />
+    <br />
+
+    <label for="content">Content: </label>
+    <input
+      type="text"
+      name="contentAZ"
+      id="content"
+      value="<%=current.content.az%>"
+    />
+    <input
+      type="text"
+      name="contentEN"
+      id="contentEN"
+      value="<%=current.content.az%>"
+    />
+    <br />
+
+    <label for="date">Date: </label>
+    <input
+      type="date"
+      name="date"
+      id="date"
+      value="<%=String(current.date.getFullYear())%>-<%=String(current.date.getMonth()+1).padStart(2,'0');%>-<%=String(current.date.getDate()).padStart(2,'0');%>"
+    />
+    <br />
+
+    <label>Old Image: </label>
+    <img
+      src="/uploads/<%=current.image.data%>"
+      alt="new-image"
+      style="border: #ffffff 1px solid"
+    />
+    <label for="image">New Image: </label>
+    <img src="#" alt="" id="uploadedImage" />
+    <input
+      type="file"
+      name="uploadedImage"
+      accept="image/*"
+      onchange="readURL(this);"
+    />
+    <br />
+    <button type="submit" class="btn btn-success">Update</button>
+  </form>
+  <script>
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $("#uploadedImage").attr("src", e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+</body>

@@ -1,6 +1,6 @@
 //
 // ===================================================================
-// ============================ LIBRARIES ============================
+// ===========================| LIBRARIES |===========================
 // ===================================================================
 //
 require("dotenv").config();
@@ -36,7 +36,7 @@ app.use(passport.session());
 
 //
 // ===================================================================
-// ============================= DATABASE ============================
+// ============================| DATABASE |===========================
 // ===================================================================
 //
 
@@ -51,7 +51,7 @@ new mongoose.connect(process.env.MONGO_DB)
 
 //
 // ===================================================================
-// ============================== MODEL ==============================
+// =============================| MODEL |=============================
 // ===================================================================
 //
 
@@ -69,7 +69,7 @@ passport.deserializeUser(User.deserializeUser());
 
 //
 // ===================================================================
-// =============================== ENG ===============================
+// ==============================| ENG |==============================
 // ===================================================================
 //
 
@@ -213,7 +213,7 @@ app.get("/eng/contact", (req, res) => {
 
 //
 // ===================================================================
-// =============================== AZE ===============================
+// ==============================| AZE |==============================
 // ===================================================================
 //
 
@@ -349,7 +349,7 @@ app.get("/aze/contact", (req, res) => {
 
 //
 // ===================================================================
-// ============================== ADMIN ==============================
+// =============================| ADMIN |=============================
 // ===================================================================
 //
 
@@ -400,7 +400,7 @@ app.post(
 
 //
 // ====================================================================
-// ============================== CREATE ==============================
+// =============================| CREATE |=============================
 // ====================================================================
 //
 
@@ -588,80 +588,23 @@ app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
 
 //
 // ====================================================================
-// ============================== DELETE ==============================
+// =============================| DELETE |=============================
 // ====================================================================
 //
 
-app.get("/admin/deleteMember/:id", (req, res) => {
+app.get("/admin/delete/:collection/:id", (req, res) => {
   if (req.isAuthenticated()) {
-    Member.findByIdAndRemove(req.params.id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`Member should be deleted ${req.params.id}`);
-        res.redirect("/admin/members");
+    eval(req.params.collection).findByIdAndRemove(
+      req.params.id,
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          // console.log(`Member should be deleted ${req.params.id}`);
+          res.redirect(`/admin/${req.params.collection}s`);
+        }
       }
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
-
-app.get("/admin/deletePartner/:id", (req, res) => {
-  if (req.isAuthenticated()) {
-    Partner.findByIdAndRemove(req.params.id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`Partner should be deleted ${req.params.id}`);
-        res.redirect("/admin/partners");
-      }
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
-
-app.get("/admin/deleteService/:id", (req, res) => {
-  if (req.isAuthenticated()) {
-    Service.findByIdAndRemove(req.params.id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`Service should be deleted ${req.params.id}`);
-        res.redirect("/admin/services");
-      }
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
-
-app.get("/admin/deleteNew/:id", (req, res) => {
-  if (req.isAuthenticated()) {
-    New.findByIdAndRemove(req.params.id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`New should be deleted ${req.params.id}`);
-        res.redirect("/admin/news");
-      }
-    });
-  } else {
-    res.redirect("/admin");
-  }
-});
-
-app.get("/admin/deleteContact/:id", (req, res) => {
-  if (req.isAuthenticated()) {
-    Contact.findByIdAndRemove(req.params.id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`Contact should be deleted ${req.params.id}`);
-        res.redirect("/admin/contacts");
-      }
-    });
+    );
   } else {
     res.redirect("/admin");
   }
@@ -669,15 +612,248 @@ app.get("/admin/deleteContact/:id", (req, res) => {
 
 //
 // ====================================================================
-// ============================== UPDATE ==============================
+// =============================| UPDATE |=============================
 // ====================================================================
 //
 
-//
+app.get("/admin/update/:collection/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    eval(req.params.collection).findById(req.params.id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        Member.find({}, (err, resultMember) => {
+          res.render(`admin/update${req.params.collection}`, {
+            title: req.params.collection,
+            current: result,
+            members: resultMember,
+          });
+        });
+      }
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.post("/admin/update/Member/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Member.findByIdAndUpdate(
+      req.params.id,
+      { UPDATES: "updates" },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send("User updated!");
+        }
+      }
+    );
+  } else {
+    res.redirect("/admin");
+  }
+});
+app.post("/admin/update/User/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    const salt = crypto.randomBytes(32);
+    User.findByIdAndUpdate(
+      req.params.id,
+      {
+        username: req.body.username,
+        hashed_password: pbkdf2.pbkdf2Sync(
+          req.body.password,
+          salt,
+          2023,
+          32,
+          "sha512"
+        ),
+        Salt: salt,
+      },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send("User updated!");
+        }
+      }
+    );
+  } else {
+    res.redirect("/admin");
+  }
+});
+app.post(
+  "/admin/update/New/:id",
+  upload.single("uploadedImage"),
+  (req, res) => {
+    if (req.isAuthenticated()) {
+      if (req.file === undefined) {
+        New.findByIdAndUpdate(
+          req.params.id,
+          {
+            title: {
+              az: req.body.titleAZ,
+              en: req.body.titleEN,
+            },
+            content: {
+              az: req.body.contentAZ,
+              en: req.body.contentEN,
+            },
+            date: req.body.date,
+          },
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.send("New updated!");
+            }
+          }
+        );
+      } else {
+        New.findByIdAndUpdate(
+          req.params.id,
+          {
+            title: {
+              az: req.body.titleAZ,
+              en: req.body.titleEN,
+            },
+            content: {
+              az: req.body.contentAZ,
+              en: req.body.contentEN,
+            },
+            date: req.body.date,
+            image: {
+              data: req.file.filename,
+              contentType: "image/png",
+            },
+          },
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.send("New updated!");
+            }
+          }
+        );
+      }
+    } else {
+      res.redirect("/admin");
+    }
+  }
+);
+app.post(
+  "/admin/update/Partner/:id",
+  upload.single("uploadedImage"),
+  (req, res) => {
+    if (req.isAuthenticated()) {
+      if (req.file === undefined) {
+        Partner.findByIdAndUpdate(
+          req.params.id,
+          {
+            name: req.body.name,
+            website: req.body.website,
+            details: {
+              az: req.body.detailsAZ,
+              en: req.body.detailsEN,
+            },
+          },
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.send("Partner updated!");
+            }
+          }
+        );
+      } else {
+        Partner.findByIdAndUpdate(
+          req.params.id,
+          {
+            name: req.body.name,
+            website: req.body.website,
+            details: {
+              az: req.body.detailsAZ,
+              en: req.body.detailsEN,
+            },
+            image: {
+              data: req.file.filename,
+              contentType: "image/png",
+            },
+          },
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.send("Partner updated!");
+            }
+          }
+        );
+      }
+    } else {
+      res.redirect("/admin");
+    }
+  }
+);
+app.post("/admin/update/Service/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    if (req.file === undefined) {
+      console.log("NO IMAGE UPLOADED");
+      console.log(req.body);
+      Service.findByIdAndUpdate(
+        req.params.id,
+        {
+          name: {
+            az: req.body.nameAZ,
+            en: req.body.nameEN,
+          },
+          details: {
+            az: req.body.detailsAZ,
+            en: req.body.detailsEN,
+          },
+          responsibleMembers: req.body.responsibleMembers,
+        },
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send("Service updated!");
+          }
+        }
+      );
+    } else {
+      Service.findByIdAndUpdate(
+        req.params.id,
+        {
+          name: {
+            az: req.body.nameAZ,
+            en: req.body.nameEN,
+          },
+          details: {
+            az: req.body.detailsAZ,
+            en: req.body.detailsEN,
+          },
+          image: {
+            data: req.file.filename,
+            contentType: "image/png",
+          },
+          responsibleMembers: req.body.responsibleMembers,
+        },
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send("Service updated!");
+          }
+        }
+      );
+    }
+  } else {
+    res.redirect("/admin");
+  }
+});
 
 //
 // ====================================================================
-// =============================== READ ===============================
+// ==============================| READ |==============================
 // ====================================================================
 //
 

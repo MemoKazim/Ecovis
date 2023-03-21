@@ -1,0 +1,17 @@
+<%-include("partials/header" , {title: title});-%>
+<body>
+  <%-include("partials/navigator" , {title: title});-%>
+
+  <form method="post" action="/admin/update/User/<%=current._id%>">
+    <input
+      type="text"
+      name="username"
+      placeholder="Username"
+      value="<%=current.username%>"
+    />
+    <br />
+    <input type="text" name="password" placeholder="New Password" />
+    <br />
+    <button type="submit">Update</button>
+  </form>
+</body>
