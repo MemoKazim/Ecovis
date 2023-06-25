@@ -9,6 +9,16 @@
   </head>
   <body>
     <h1>Meajınız uğurla göndərildi!</h1>
-    <p>3 saniyə ərzində geri yönləndiriləcəksiniz</p>
+    <p><span>3</span> saniyə ərzində geri yönləndiriləcəksiniz...</p>
+    <script>
+      let timeleft = 1;
+      var timer = setInterval(() => {
+        if (timeleft >= 3) {
+          clearInterval(timer);
+        }
+        document.getElementById("seconds").innerHTML = 3 - timeleft;
+        timeleft += 1;
+      }, 1000);
+    </script>
   </body>
 </html>

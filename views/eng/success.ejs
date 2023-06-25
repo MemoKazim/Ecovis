@@ -9,6 +9,16 @@
   </head>
   <body>
     <h1>Your message succesfully sent!</h1>
-    <p>You will be redirected in 3 seconds</p>
+    <p>You will be redirected in <span id="seconds"> 3 </span> seconds...</p>
+    <script>
+      let timeleft = 1;
+      var timer = setInterval(() => {
+        if (timeleft >= 3) {
+          clearInterval(timer);
+        }
+        document.getElementById("seconds").innerHTML = 3 - timeleft;
+        timeleft += 1;
+      }, 1000);
+    </script>
   </body>
 </html>

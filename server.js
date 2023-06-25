@@ -14,7 +14,7 @@ const LocalStrategy = require("passport-local");
 const crypto = require("crypto");
 const pbkdf2 = require("pbkdf2");
 const validator = require("validator");
-const PORT = 8080;
+const PORT = 3000;
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -887,6 +887,10 @@ app.get("/admin/:collection", (req, res) => {
   } else {
     res.redirect("/admin");
   }
+});
+
+app.get("*", (req, res) => {
+  res.render("eng/404", { title: "404" });
 });
 
 app.listen(PORT, () => {

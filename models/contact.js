@@ -13,7 +13,7 @@ const ecovisShcema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  phoneNumber: Number,
+  phoneNumber: String,
   message: {
     type: String,
     require: true,

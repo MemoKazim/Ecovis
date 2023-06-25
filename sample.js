@@ -1,6 +1,7 @@
-members.forEach((member) => {
-  if (current.responsibleMembers.includes(member._id)) {
-    console.log("Member triggered! " + member._id);
+function transform(string) {
+  for (let char of string) {
+    console.log(char);
   }
-  console.log("Member is not valid for this service " + member._id);
-});
+}
+
+transform("salam");
