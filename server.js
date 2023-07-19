@@ -432,6 +432,7 @@ app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
       },
       memberType: req.body.memberType,
     });
+    console.log(req.body);
     for (let i = 0; i < req.body.eduYear.length; i++) {
       newMember.education.push({
         year: req.body.eduYear[i],
@@ -673,7 +674,7 @@ app.post("/admin/update/User/:id", (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          res.send("User updated!");
+          res.write("<h1>User updated!</h1>");
         }
       }
     );
@@ -889,12 +890,36 @@ app.get("/admin/:collection", (req, res) => {
   }
 });
 
-app.get("*", (req, res) => {
-  res.render("eng/404", { title: "404" });
+app.get("/admin/detail/Contact/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Contact.findById(req.params.id, (err, resultData) => {
+      if (err) {
+        throw err;
+      }
+      res.render(`admin/detailContact`, {
+        title: "Contact",
+        contact: resultData,
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is open at ${PORT}`);
+app.get("/admin/detail/Member/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Member.findById(req.params.id, (err, resultData) => {
+      if (err) {
+        throw err;
+      }
+      res.render(`admin/detailMember`, {
+        title: "Member",
+        member: resultData,
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
 });
 
 // app.get("/register", (req, res) => {
@@ -915,4 +940,12 @@ app.listen(PORT, () => {
 //   });
 //   user.save();
 //   res.send("User saved!");
+//   res.redirect("/admin");
 // });
+app.get("*", (req, res) => {
+  res.render("eng/404", { title: "404" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is open at ${PORT}`);
+});

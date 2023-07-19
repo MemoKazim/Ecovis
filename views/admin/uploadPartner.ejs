@@ -13,12 +13,22 @@
     <input type="text" name="website" id="website" /> <br />
 
     <label for="detail">About Partner: </label>
-    <input type="text" name="detailsAZ" id="detail" placeholder="AZ" />
-    <input type="text" name="detailsEN" id="detailEN" placeholder="EN" />
+    <textarea
+      type="text"
+      name="detailsAZ"
+      id="detail"
+      placeholder="AZ"
+    ></textarea>
+    <textarea
+      type="text"
+      name="detailsEN"
+      id="detailEN"
+      placeholder="EN"
+    ></textarea>
     <br />
 
     <label for="image">Image: </label>
-    <input type="file" name="uploadedImage" id="image" /> <br />
+    <input type="file" name="uploadedImage" id="image" required /> <br />
     <button type="submit">Send</button>
   </form>
 </body>
