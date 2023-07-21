@@ -922,6 +922,59 @@ app.get("/admin/detail/Member/:id", (req, res) => {
   }
 });
 
+app.get("/admin/detail/New/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    New.findById(req.params.id, (err, resultData) => {
+      if (err) {
+        throw err;
+      }
+      res.render(`admin/detailNew`, {
+        title: "New",
+        news: resultData,
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/detail/Partner/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Partner.findById(req.params.id, (err, resultData) => {
+      if (err) {
+        throw err;
+      }
+      res.render(`admin/detailPartner`, {
+        title: "Partner",
+        partner: resultData,
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
+
+app.get("/admin/detail/Service/:id", (req, res) => {
+  if (req.isAuthenticated()) {
+    Service.findById(req.params.id, (err, resultData) => {
+      if (err) {
+        throw err;
+      }
+      Member.find({}, (err, resultMember) => {
+        if (err) {
+          throw err;
+        }
+        res.render(`admin/detailService`, {
+          title: "Service",
+          service: resultData,
+          members: resultMember,
+        });
+      });
+    });
+  } else {
+    res.redirect("/admin");
+  }
+});
 // app.get("/register", (req, res) => {
 //   res.render("admin/login_tmp");
 // });
