@@ -31,7 +31,6 @@ function showItem(item_number) {
   selected_topic = document.querySelectorAll(`#section-1-item-${item_number}`);
   selected_topic[0].classList.add("active");
   child_elements = selected_topic[0].childNodes[1].childNodes;
-  console.log(child_elements);
   child_elements[1].classList.add("active");
   child_elements[3].classList.add("active");
   white_logo = document.querySelectorAll(".item-logo")[item_number - 1];
@@ -52,12 +51,26 @@ function showItem(item_number) {
 //   current_dot.classList.add("active-dot");
 // }
 
-let section1_height = document.querySelector(".section-1").clientHeight;
-
-console.log(document.getElementsByClassName("section-2")[0]);
-console.log(section1_height);
-
-document.getElementById("section-2").style.top = section1_height + "px";
+let checkbox = document.getElementById("navbar-toggler");
+console.log(checkbox);
+let navbar = document.getElementsByClassName("navbar-right-bottom")[0];
+let navbar_height = document.querySelector("navbar").clientHeight;
+let checkbox_status = 0;
+checkbox.addEventListener("change", () => {
+  console.log("changed!");
+  if (!checkbox.checked) {
+    console.log("triggered");
+    navbar.classList.add("responsive");
+    navbar.style.top = navbar_height + "px";
+    if (checkbox_status == 0) {
+      navbar.innerHTML +=
+        '<li class="navbar-item"><a href="/aze/index">az</a></li>    <li class="navbar-item"><a href="/eng/index">en</a></li>';
+      checkbox_status = 1;
+    }
+  } else {
+    navbar.classList.remove("responsive");
+  }
+});
 
 $(document).ready(function () {
   $(".customer-logos").slick({
@@ -84,3 +97,14 @@ $(document).ready(function () {
     ],
   });
 });
+let section1_height = document.querySelector(".section-1").clientHeight;
+let section2_height = document.querySelector(".section-2").clientHeight;
+
+if (window.innerWidth > 1024) {
+  document.getElementById("section-2").style.top = section1_height + "px";
+}
+
+if (window.innerWidth < 1024) {
+  document.getElementById("section-2").style.marginBottom =
+    section2_height / 10 + "px";
+}

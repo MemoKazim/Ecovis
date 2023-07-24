@@ -433,25 +433,47 @@ app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
       memberType: req.body.memberType,
     });
     console.log(req.body);
-    for (let i = 0; i < req.body.eduYear.length; i++) {
+    if (typeof req.body.eduYear === "string") {
       newMember.education.push({
-        year: req.body.eduYear[i],
+        year: req.body.eduYear,
         university: {
-          az: req.body.eduUniversityAZ[i],
-          en: req.body.eduUniversityEN[i],
+          az: req.body.eduUniversityAZ,
+          en: req.body.eduUniversityEN,
         },
         faculty: {
-          az: req.body.eduFacultyAZ[i],
-          en: req.body.eduFacultyEN[i],
+          az: req.body.eduFacultyAZ,
+          en: req.body.eduFacultyEN,
         },
       });
+    } else if (typeof req.body.eduYear === "object") {
+      for (let i = 0; i < req.body.eduYear.length; i++) {
+        newMember.education.push({
+          year: req.body.eduYear[i],
+          university: {
+            az: req.body.eduUniversityAZ[i],
+            en: req.body.eduUniversityEN[i],
+          },
+          faculty: {
+            az: req.body.eduFacultyAZ[i],
+            en: req.body.eduFacultyEN[i],
+          },
+        });
+      }
     }
-    for (let i = 0; i < req.body.expYear.length; i++) {
+    if (typeof req.body.eduYear === "string") {
       newMember.experience.push({
-        year: req.body.expYear[i],
-        position: req.body.expPosition[i],
-        organization: req.body.expOrganization[i],
+        year: req.body.expYear,
+        position: req.body.expPosition,
+        organization: req.body.expOrganization,
       });
+    } else if (typeof req.body.eduYear === "object") {
+      for (let i = 0; i < req.body.expYear.length; i++) {
+        newMember.experience.push({
+          year: req.body.expYear[i],
+          position: req.body.expPosition[i],
+          organization: req.body.expOrganization[i],
+        });
+      }
     }
     newMember
       .save()
