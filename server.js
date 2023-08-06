@@ -460,13 +460,13 @@ app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
         });
       }
     }
-    if (typeof req.body.eduYear === "string") {
+    if (typeof req.body.expYear === "string") {
       newMember.experience.push({
         year: req.body.expYear,
         position: req.body.expPosition,
         organization: req.body.expOrganization,
       });
-    } else if (typeof req.body.eduYear === "object") {
+    } else if (typeof req.body.expYear === "object") {
       for (let i = 0; i < req.body.expYear.length; i++) {
         newMember.experience.push({
           year: req.body.expYear[i],
@@ -580,30 +580,53 @@ app.get("/admin/uploadNew", (req, res) => {
 
 app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
   if (req.isAuthenticated()) {
-    const newNew = new New({
-      title: {
-        az: req.body.titleAZ,
-        en: req.body.titleEN,
-      },
-      content: {
-        az: req.body.contentAZ,
-        en: req.body.contentEN,
-      },
-      date: req.body.date,
-      image: {
-        data: req.file.filename,
-        contentType: "image/png",
-      },
-    });
-    newNew
-      .save()
-      .then(() => {
-        console.log("New saved in DB");
-        res.send("New saved in DB");
-      })
-      .catch((err) => {
-        console.log(err);
+    if (req.file === undefined) {
+      let newNew = new New({
+        title: {
+          az: req.body.titleAZ,
+          en: req.body.titleEN,
+        },
+        content: {
+          az: req.body.contentAZ,
+          en: req.body.contentEN,
+        },
+        date: req.body.date,
       });
+      newNew
+        .save()
+        .then(() => {
+          console.log("New saved in DB");
+          res.send("New saved in DB");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      let newNew = new New({
+        title: {
+          az: req.body.titleAZ,
+          en: req.body.titleEN,
+        },
+        content: {
+          az: req.body.contentAZ,
+          en: req.body.contentEN,
+        },
+        date: req.body.date,
+        image: {
+          data: req.file.filename,
+          contentType: "image/png",
+        },
+      });
+      newNew
+        .save()
+        .then(() => {
+          console.log("New saved in DB");
+          res.send("New saved in DB");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   } else {
     res.redirect("/admin");
   }
