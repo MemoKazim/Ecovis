@@ -1044,19 +1044,19 @@ app.post("/register", (req, res) => {
 });
 */
 
-app.get("401", (req, res) => {
+app.get("/401", (req, res) => {
   res.status(401).render("error/401");
 });
-app.get("403", (req, res) => {
+app.get("/403", (req, res) => {
   res.status(403).render("error/403");
 });
-app.get("404", (req, res) => {
+app.get("/404", (req, res) => {
   res.status(404).render("error/404");
 });
-app.get("502", (req, res) => {
+app.get("/502", (req, res) => {
   res.status(502).render("error/502");
 });
-app.get("503", (req, res) => {
+app.get("/503", (req, res) => {
   res.status(503).render("error/503");
 });
 
