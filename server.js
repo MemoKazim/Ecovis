@@ -61,6 +61,7 @@ const Partner = require("./models/partner");
 const Service = require("./models/service");
 const New = require("./models/new");
 const User = require("./models/user");
+const { error } = require("console");
 
 const upload = multer({ dest: "public/uploads/" });
 
@@ -1020,26 +1021,45 @@ app.get("/admin/detail/Service/:id", (req, res) => {
     res.status(401).render("error/401");
   }
 });
-// app.get("/register", (req, res) => {
-//   res.render("admin/login_tmp");
-// });
-// app.post("/register", (req, res) => {
-//   const salt = crypto.randomBytes(32);
-//   const user = new User({
-//     username: req.body.usrname,
-//     hashed_password: pbkdf2.pbkdf2Sync(
-//       req.body.passwd,
-//       salt,
-//       2023,
-//       32,
-//       "sha512"
-//     ),
-//     Salt: salt,
-//   });
-//   user.save();
-//   res.send("User saved!");
-//   res.redirect("/admin");
-// });
+/*
+app.get("/register", (req, res) => {
+  res.render("admin/login_tmp");
+});
+app.post("/register", (req, res) => {
+  const salt = crypto.randomBytes(32);
+  const user = new User({
+    username: req.body.usrname,
+    hashed_password: pbkdf2.pbkdf2Sync(
+      req.body.passwd,
+      salt,
+      2023,
+      32,
+      "sha512"
+    ),
+    Salt: salt,
+  });
+  user.save();
+  res.send("User saved!");
+  res.redirect("/admin");
+});
+*/
+
+app.get("401", (req, res) => {
+  res.status(401).render("error/401");
+});
+app.get("403", (req, res) => {
+  res.status(403).render("error/403");
+});
+app.get("404", (req, res) => {
+  res.status(404).render("error/404");
+});
+app.get("502", (req, res) => {
+  res.status(502).render("error/502");
+});
+app.get("503", (req, res) => {
+  res.status(503).render("error/503");
+});
+
 app.get("*", (req, res) => {
   res.status(404).render("error/404");
 });
