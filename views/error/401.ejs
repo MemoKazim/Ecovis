@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="3;url=/eng/index" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .navbar {
+        background: linear-gradient(
+          0deg,
+          rgba(173, 13, 55, 1) 0%,
+          rgba(130, 1, 31, 1) 100%
+        );
+        width: 100%;
+        text-transform: uppercase;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .logo {
+        margin: 1rem 0;
+      }
+      .logo img {
+        width: 11rem;
+        scale: 1.2;
+      }
+      footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 10vh;
+        display: flex;
+        align-items: center;
+        background-color: #72747c;
+      }
+      .footer-container {
+        width: 80vw;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 10vw;
+      }
+      .footer-left,
+      .footer-right {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 400;
+      }
+    </style>
+    <title>401 Unauthorized!</title>
+  </head>
+
+  <body>
+    <navbar class="navbar">
+      <div class="logo">
+        <a href="/">
+          <img src="/images/logo_ecovis_Azerbaijan.png" alt="logo" />
+        </a>
+      </div>
+    </navbar>
+    <h1>401 Unauthorized</h1>
+    <p>You'll be redirected in <span id="seconds"> 3 </span> seconds...</p>
+    <footer>
+      <div class="footer-container">
+        <div class="footer-left">2023 © All Right Reserved.</div>
+        <div class="footer-right">Ecovis Azerbaijan</div>
+      </div>
+    </footer>
+  </body>
+  <script>
+    let timeleft = 1;
+    var timer = setInterval(() => {
+      if (timeleft >= 3) {
+        clearInterval(timer);
+      }
+      document.getElementById("seconds").innerHTML = 3 - timeleft;
+      timeleft += 1;
+    }, 1000);
+  </script>
+</html>

@@ -408,7 +408,7 @@ app.get("/admin/uploadMember", (req, res) => {
   if (req.isAuthenticated()) {
     res.render("admin/uploadMember", { title: "Member" });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -484,14 +484,14 @@ app.post("/admin/uploadMember", upload.single("uploadedImage"), (req, res) => {
         console.log(err);
       });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 app.get("/admin/uploadPartner", (req, res) => {
   if (req.isAuthenticated()) {
     res.render("admin/uploadPartner", { title: "Partner" });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -519,7 +519,7 @@ app.post("/admin/uploadPartner", upload.single("uploadedImage"), (req, res) => {
         console.log(err);
       });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 app.get("/admin/uploadService", (req, res) => {
@@ -535,7 +535,7 @@ app.get("/admin/uploadService", (req, res) => {
       }
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -566,7 +566,7 @@ app.post("/admin/uploadService", upload.single("uploadedImage"), (req, res) => {
         console.log(err);
       });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -574,7 +574,7 @@ app.get("/admin/uploadNew", (req, res) => {
   if (req.isAuthenticated()) {
     res.render("admin/uploadNew", { title: "New" });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -628,7 +628,7 @@ app.post("/admin/uploadNew", upload.single("uploadedImage"), (req, res) => {
         });
     }
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -652,7 +652,7 @@ app.get("/admin/delete/:collection/:id", (req, res) => {
       }
     );
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -678,7 +678,7 @@ app.get("/admin/update/:collection/:id", (req, res) => {
       }
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -696,7 +696,7 @@ app.post("/admin/update/Member/:id", (req, res) => {
       }
     );
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 app.post("/admin/update/User/:id", (req, res) => {
@@ -724,7 +724,7 @@ app.post("/admin/update/User/:id", (req, res) => {
       }
     );
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 app.post(
@@ -782,7 +782,7 @@ app.post(
         );
       }
     } else {
-      res.redirect("/admin");
+      res.status(401).render("error/401");
     }
   }
 );
@@ -835,7 +835,7 @@ app.post(
         );
       }
     } else {
-      res.redirect("/admin");
+      res.status(401).render("error/401");
     }
   }
 );
@@ -893,7 +893,7 @@ app.post("/admin/update/Service/:id", (req, res) => {
       );
     }
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -931,7 +931,7 @@ app.get("/admin/:collection", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -947,7 +947,7 @@ app.get("/admin/detail/Contact/:id", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -963,7 +963,7 @@ app.get("/admin/detail/Member/:id", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -979,7 +979,7 @@ app.get("/admin/detail/New/:id", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -995,7 +995,7 @@ app.get("/admin/detail/Partner/:id", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 
@@ -1017,7 +1017,7 @@ app.get("/admin/detail/Service/:id", (req, res) => {
       });
     });
   } else {
-    res.redirect("/admin");
+    res.status(401).render("error/401");
   }
 });
 // app.get("/register", (req, res) => {
@@ -1041,7 +1041,7 @@ app.get("/admin/detail/Service/:id", (req, res) => {
 //   res.redirect("/admin");
 // });
 app.get("*", (req, res) => {
-  res.render("eng/404", { title: "404" });
+  res.status(404).render("error/404");
 });
 
 app.listen(PORT, () => {
