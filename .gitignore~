@@ -1,4 +1,0 @@
-node_modules/*
-.env
-ecovis\ backup.txt
-public/uploads/*
